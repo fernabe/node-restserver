@@ -1,5 +1,8 @@
 require('./config/config')
+
 const express = require('express')
+const mongoose = require('mongoose');
+
 const app = express()
 const bodyParser = require('body-parser')
 
@@ -9,33 +12,18 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.get('/usuario', function (req, res) {
-  res.json('get usuario');
-});
+app.use( require('./routes/usuario'))
 
-app.post('/usuario', (req, res) => {
-    let usuario = req.body;
-    if(usuario.nombre === undefined){
-        res.status(400).json({
-            ok: false,
-            message: 'El nombre es necesario'
-        });
-    }else{
-        res.json({
-            usuario
-        });
-    }
-});
- 
-app.put('/usuario/:id', (req, res) => {
-    let id = req.params.id;
-    res.json({
-        id
-    });
-});
+// Make Mongoose use `findOneAndUpdate()`. Note that this option is `true`
+// by default, you need to set it to false.
+mongoose.set('useFindAndModify', false);
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useUnifiedTopology', true);
+mongoose.set('useCreateIndex', true);
 
-app.delete('/usuario', (req, res) => {
-    res.json('delete usuario');
+mongoose.connect(process.env.URLDB, (err, res) => {
+    if( err ) throw err;
+    console.log('Base de datos ONLINE');
 });
 
 app.listen(process.env.PORT, () => {
