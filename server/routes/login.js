@@ -72,7 +72,7 @@ async function verify(token) {
     // If request specified a G Suite domain:
     // const domain = payload['hd'];
 }
-//verify().catch(console.error);
+
 
 app.post('/google', async (req, res) => {
 
